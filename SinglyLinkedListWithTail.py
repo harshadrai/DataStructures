@@ -7,16 +7,16 @@ class Element(object):
 class SinglyLinkedList(object):
     def __init__(self):
         self.head=None
+        self.tail=None
     def append(self,element):
-        if self.head:
-            next_element=self.head
-            while next_element.next:
-                next_element=next_element.next
-            next_element.next=element
+        if self.tail:
+            self.tail.next=element
             element.next=None
+            self.tail=element
         else:
             self.head=element
             element.next=None
+            self.tail=element
     def push_front(self,element):
         next_element=self.head
         self.head=element
@@ -32,11 +32,8 @@ class SinglyLinkedList(object):
         else:
             return "Linked List is empty."
     def top_back(self):
-        if self.head:
-            next_element=self.head
-            while next_element.next:
-                next_element=next_element.next
-            return next_element.value
+        if self.tail:
+            return self.tail.value
         else:
             return "Empty Linked List"
     def pop_back(self):
@@ -47,16 +44,19 @@ class SinglyLinkedList(object):
                 prev_element=next_element
                 next_element=next_element.next
             prev_element.next=None
+            self.tail=prev_element
         else:
             return "Linked List is empty."
     def find(self,key):
         if self.head:
-            next_element=self.head
-            while next_element and next_element.value!=key:
-                next_element=next_element.next
-            if next_element:
+            if self.tail.value==key:
                 return True
             else:
+                next_element=self.head
+                while next_element.next:
+                    if next_element.value==key:
+                        return True
+                    next_element=next_element.next
                 return False
         else:
             return False
