@@ -60,7 +60,6 @@ class SinglyLinkedList(object):
                 return False
         else:
             return False
-    #Erase not working properly.Correct it!!!!
     def erase(self,key):
         if self.head:
             if self.head.value==key:

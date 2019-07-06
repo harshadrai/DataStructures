@@ -4,7 +4,7 @@ class Element(object):
         self.next=next
 
 
-class SinglyLinkedList(object):
+class SinglyLinkedListWithTail(object):
     def __init__(self):
         self.head=None
         self.tail=None
@@ -64,8 +64,12 @@ class SinglyLinkedList(object):
     def erase(self,key):
         if self.head:
             if self.head.value==key:
-                self.head=self.head.next
-                return
+                if self.head.next:
+                    self.head=self.head.next
+                    return
+                else:
+                    self.head=None
+                    self.tail=None
             else:
                 prev_element=self.head
                 next_element=self.head.next
@@ -73,8 +77,12 @@ class SinglyLinkedList(object):
                     prev_element=next_element
                     next_element=next_element.next
                 if next_element:
-                    prev_element.next=next_element.next
-                    return
+                    if next_element.next:
+                        prev_element.next=next_element.next
+                        return
+                    else:
+                        prev_element.next=next_element.next
+                        self.tail=prev_element
                 else:
                     return str(key)+" does not exist in Linked List"
         else:
@@ -110,8 +118,13 @@ class SinglyLinkedList(object):
             while next_element and next_element!=element:
                 next_element=next_element.next
             if next_element:
-                new_element.next=next_element.next
-                next_element.next=new_element
+                if next_element.next:
+                    new_element.next=next_element.next
+                    next_element.next=new_element
+                else:
+                    new_element.next=next_element.next
+                    next_element.next=new_element
+                    self.tail=new_element
             else:
                 return "Given element does not exist"
         else:
@@ -119,7 +132,7 @@ class SinglyLinkedList(object):
 
 
 
-my_list=SinglyLinkedList()
+my_list=SinglyLinkedListWithTail()
 e1 = Element(5)
 e2=Element(6)
 e3=Element(4)
@@ -146,6 +159,7 @@ my_list.erase(7)
 my_list.top_back()
 my_list.top_front()
 my_list.erase(6)
+print(my_list.tail)
 my_list.is_empty()
 my_list.add_before(e4,7)
 my_list.append(e1)
