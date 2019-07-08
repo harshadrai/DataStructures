@@ -22,9 +22,11 @@ class DoublyLinkedList(object):
             element.prev=None
     def push_front(self,element):
         next_element=self.head
+        if next_element:
+            next_element.prev=element
         self.head=element
         element.next=next_element
-        next_element.prev=element
+        element.prev=None
     def top_front(self):
         if self.head:
             return self.head.value
@@ -168,3 +170,7 @@ print(my_list.head.next.value)
 my_list.head=None
 my_list.is_empty()
 my_list.add_after(e1,7)
+my_list.push_front(e1)
+print(my_list.head.prev)
+print(my_list.head.next)
+print(my_list.head.value)

@@ -2,39 +2,41 @@ class Element(object):
     def __init__(self,value,next=None):
         self.value=value
         self.next=next
+        self.prev=prev
 
 
-class SinglyLinkedListWithTail(object):
+class DoublyLinkedListWithTail(object):
     def __init__(self):
         self.head=None
         self.tail=None
     def append(self,element):
         if self.tail:
-            self.tail.next=element
+            element.prev=self.tail
             element.next=None
+            self.tail.next=element
             self.tail=element
         else:
             self.head=element
             element.next=None
+            element.prev=None
             self.tail=element
     def push_front(self,element):
         if not self.tail:
             self.tail=element
         next_element=self.head
+        if next_element:
+            next_element.prev=element
         self.head=element
         element.next=next_element
+        element.prev=None
     def top_front(self):
         if self.head:
             return self.head.value
         else:
             return "Linked List is empty."
     def pop_front(self):
-        if self.head:
-            if self.head==self.tail:
-                self.head=None
-                self.tail=None
-            else:
-                self.head=self.head.next
+        if self.head:        
+            self.head=self.head.next
         else:
             return "Linked List is empty."
     def top_back(self):
@@ -44,17 +46,13 @@ class SinglyLinkedListWithTail(object):
             return "Empty Linked List"
     def pop_back(self):
         if self.head:
-            if self.head==self.tail:
-                self.head=None
-                self.tail=None
-            else:
-                prev_element=None
-                next_element=self.head
-                while next_element.next:
-                    prev_element=next_element
-                    next_element=next_element.next
-                prev_element.next=None
-                self.tail=prev_element
+            prev_element=None
+            next_element=self.head
+            while next_element.next:
+                prev_element=next_element
+                next_element=next_element.next
+            prev_element.next=None
+            self.tail=prev_element
         else:
             return "Linked List is empty."
     def find(self,key):
@@ -142,7 +140,7 @@ class SinglyLinkedListWithTail(object):
 
 
 
-my_list=SinglyLinkedListWithTail()
+my_list=DoublyLinkedListWithTail()
 e1 = Element(5)
 e2=Element(6)
 e3=Element(4)
@@ -184,14 +182,5 @@ e5=my_list.head
 my_list.add_after(e5,4.25)
 print(my_list.head.next.value)
 my_list.head=None
-my_list.tail=None
 my_list.is_empty()
 my_list.add_after(e1,7)
-my_list.push_front(e1)
-print(my_list.head.next)
-print(my_list.head.value)
-print(my_list.tail.value)
-my_list.pop_front()
-print(my_list.head.value) #Should give error
-print(my_list.tail.value) #Should give error
-my_list.is_empty()
