@@ -1,5 +1,5 @@
 class Element(object):
-    def __init__(self,value,next=None):
+    def __init__(self,value,next=None,prev=None):
         self.value=value
         self.next=next
         self.prev=prev
@@ -21,11 +21,11 @@ class DoublyLinkedListWithTail(object):
             element.prev=None
             self.tail=element
     def push_front(self,element):
-        if not self.tail:
-            self.tail=element
         next_element=self.head
         if next_element:
             next_element.prev=element
+        else:
+            self.tail=element
         self.head=element
         element.next=next_element
         element.prev=None
@@ -35,8 +35,13 @@ class DoublyLinkedListWithTail(object):
         else:
             return "Linked List is empty."
     def pop_front(self):
-        if self.head:        
-            self.head=self.head.next
+        if self.head:
+            if self.head==self.tail:
+                self.head=None
+                self.tail=None
+            else:
+                self.head=self.head.next
+                self.head.prev=None
         else:
             return "Linked List is empty."
     def top_back(self):
@@ -45,14 +50,13 @@ class DoublyLinkedListWithTail(object):
         else:
             return "Empty Linked List"
     def pop_back(self):
-        if self.head:
-            prev_element=None
-            next_element=self.head
-            while next_element.next:
-                prev_element=next_element
-                next_element=next_element.next
-            prev_element.next=None
-            self.tail=prev_element
+        if self.tail:
+            if self.head==self.tail:
+                self.head=None
+                self.tail=None
+            else:
+                self.tail=self.tail.prev
+                self.tail.next=None
         else:
             return "Linked List is empty."
     def find(self,key):
@@ -74,23 +78,22 @@ class DoublyLinkedListWithTail(object):
             if self.head.value==key:
                 if self.head.next:
                     self.head=self.head.next
+                    self.head.prev=None
                     return
                 else:
                     self.head=None
                     self.tail=None
+            elif self.tail.value==key:
+                self.tail.prev.next=None
+                self.tail=self.tail.prev
             else:
-                prev_element=self.head
                 next_element=self.head.next
                 while next_element and next_element.value!=key:
-                    prev_element=next_element
                     next_element=next_element.next
                 if next_element:
-                    if next_element.next:
-                        prev_element.next=next_element.next
-                        return
-                    else:
-                        prev_element.next=next_element.next
-                        self.tail=prev_element
+                    next_element.prev.next=next_element.next
+                    next_element.next.prev=next_element.prev
+                    return
                 else:
                     return str(key)+" does not exist in Linked List"
         else:
@@ -101,42 +104,37 @@ class DoublyLinkedListWithTail(object):
         else:
             return True
     def add_before(self,element,key):
-        if self.head:
-            new_element=Element(key)
-            if self.head==element:
-                new_element.next=self.head
+        new_element=Element(key)
+        next_element=self.head
+        while next_element and next_element!=element:
+            next_element=next_element.next
+        if next_element:
+            new_element.next=next_element
+            if next_element.prev:
+                next_element.prev.next=new_element
+                new_element.prev=next_element.prev
+            else:
                 self.head=new_element
-            else:
-                prev_element=self.head
-                next_element=self.head.next
-                while next_element and next_element!=element:
-                    prev_element=next_element
-                    next_element=next_element.next
-                if next_element:
-                    new_element.next=prev_element.next
-                    prev_element.next=new_element
-                else:
-                    return "Given element does not exist"
+                new_element.prev=None
+            next_element.prev=new_element
         else:
-            return "The Linked List is empty."
+            return "Given element does not exist"        
     def add_after(self,element,key):
-        if self.head:
-            new_element=Element(key)
-            next_element=self.head
-            while next_element and next_element!=element:
-                next_element=next_element.next
-            if next_element:
-                if next_element.next:
-                    new_element.next=next_element.next
-                    next_element.next=new_element
-                else:
-                    new_element.next=next_element.next
-                    next_element.next=new_element
-                    self.tail=new_element
+        new_element=Element(key)
+        next_element=self.head
+        while next_element and next_element!=element:
+            next_element=next_element.next
+        if next_element:
+            new_element.prev=next_element
+            if next_element.next:
+                next_element.next.prev=new_element
+                new_element.next=next_element.next
             else:
-                return "Given element does not exist"
+                self.tail=new_element
+                new_element.next=None
+            next_element.next=new_element
         else:
-            return "The Linked List is empty."
+            return "Given element does not exist"
 
 
 
@@ -182,5 +180,23 @@ e5=my_list.head
 my_list.add_after(e5,4.25)
 print(my_list.head.next.value)
 my_list.head=None
+my_list.tail=None
 my_list.is_empty()
 my_list.add_after(e1,7)
+my_list.push_front(e1)
+print(my_list.head.next)
+print(my_list.head.value)
+print(my_list.tail.value)
+my_list.pop_front()
+print(my_list.head.value) #Should give error
+print(my_list.tail.value) #Should give error
+my_list.push_front(e1)
+print(my_list.head.value)
+print(my_list.tail.value)
+my_list.pop_back()
+print(my_list.head.value) #Should give error
+print(my_list.tail.value) #Should give error
+my_list.is_empty()
+my_list.append(e1)
+print(my_list.head.value)
+print(my_list.tail.value)
