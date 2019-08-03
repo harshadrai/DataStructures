@@ -7,27 +7,44 @@ class Element(object):
 class Queue(object):
     def __init__(self, element=None):
         self.head=element
-    def insert(self,element):
-        next_element=self.head
-        self.head=element
-        element.next=next_element
-    def remove(self):
+        self.tail=element
+    def enqueue(self,element):
+        if self.tail:
+            self.tail.next=element
+            element.next=None
+            self.tail=element
+        else:
+            self.head=element
+            element.next=None
+            self.tail=element
+    def dequeue(self):
         if self.head:        
-            print(self.head.value)
+            exiting_element=self.head
+            print(exiting_element.value)
             self.head=self.head.next
+            if not self.head:
+                self.tail=None
+            return exiting_element
         else:
             return "Linked List is empty."
+    def is_empty(self):
+        if self.head:
+            return False
+        else:
+            return True
+
 
 
 e1=Element(5)
 e2=Element(6)
 e3=Element(7)
-my_stack=Queue(e1)
-my_stack.insert(e2)
-my_stack.insert(e3)
-my_stack.remove()
-my_stack.remove()
-my_stack.remove()
-my_stack.remove()
-my_stack.insert(e1)
-my_stack.remove()
+my_queue=Queue(e1)
+my_queue.enqueue(e2)
+my_queue.enqueue(e3)
+my_queue.dequeue()
+my_queue.dequeue()
+my_queue.dequeue()
+my_queue.dequeue()
+my_queue.enqueue(e1)
+my_queue.dequeue()
+my_queue.is_empty()
